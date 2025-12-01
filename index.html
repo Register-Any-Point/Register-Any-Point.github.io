@@ -98,8 +98,8 @@
           <div class="landing-card">
             <div class="landing-intro">
               <h1 class="title is-2 publication-title">
-                Rectified Point Flow: <br />
-                Generic Point Cloud Pose Estimation
+                Register Any Point:  <br />
+                Scaling 3D Point Cloud Registration by Flow Matching
               </h1>
             </div>
             <div class="authors-block" style="margin-top: 1rem;">
@@ -170,7 +170,7 @@
             </div>
             <div class="tldr-card">
               <p class="has-text-centered">
-                Learning a continuous Euclidean-space point flow that <br /> assembles unposed parts and recovers <strong>poses from assembled shapes.</strong>
+                Accomplish single-stage multi-view point cloud registration by flow matching
               </p>
             </div>
             <!-- <div class="tldr-card">
@@ -188,13 +188,19 @@
                       <h3 class="title is-4 section-title">Abstract</h3>
                       <div class="has-text-left">
                         <p>
-                          We introduce <span class="methodname">Rectified Point Flow</span>, a unified parameterization that formulates pairwise point cloud registration and multi-part shape assembly as a single conditional generative problem.
-                          <!-- <br><br> -->
-                          Given unposed point clouds, our method learns a continuous point-wise velocity field that transports noisy points toward their target positions, from which part poses are recovered.
-        In contrast to prior work that regresses part-wise poses with ad-hoc symmetry handling, our method intrinsically learns assembly symmetries without symmetry labels.
-        <br><br>
-        Together with a self-supervised encoder focused on overlapping points, our method achieves a new state-of-the-art performance on six benchmarks spanning pairwise registration and shape assembly.
-        Notably, our unified formulation enables effective joint training on diverse datasets, facilitating the learning of shared geometric priors and consequently boosting accuracy.
+                          Point cloud registration aligns multiple unposed point clouds into a common
+                          frame, and is a core step for 3D reconstruction and robot localization. In this
+                          work, we cast registration as conditional generation: a learned continuous,
+                          point-wise velocity field transports noisy points to a registered scene, from
+                          which the pose of each view is recovered. Unlike previous methods that conduct
+                          correspondence matching to estimate the transformation between a pair of point
+                          clouds and then optimize the pairwise transformations to realize multi-view
+                          registration, our model directly generates the registered point cloud. With a
+                          lightweight local feature extractor and test-time rigidity enforcement, our
+                          approach achieves state-of-the-art results on pairwise and multi-view
+                          registration benchmarks, particularly with low overlap, and generalizes across
+                          scales and sensor modalities. It further supports downstream tasks including
+                          relocalization, multi-robot SLAM, and multi-session map merging.
                         </p>
                       </div>
                     </div>
