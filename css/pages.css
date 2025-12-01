@@ -1,0 +1,10 @@
+.pages {
+    width: 100%;
+    text-align: center;
+}
+
+.pages img {
+    width: auto;
+    height: 32px;
+    cursor: pointer;
+}

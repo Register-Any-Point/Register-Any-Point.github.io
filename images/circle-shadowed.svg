@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 100">
+  <defs>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="0" stdDeviation="3" flood-opacity="0.7"/>
+    </filter>
+  </defs>
+  
+  <circle 
+    cx="40" 
+    cy="50" 
+    r="20" 
+    fill="none" 
+    stroke="#778899"
+    stroke-width="6"
+    filter="url(#shadow)"
+  />
+</svg>

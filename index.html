@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="description" content="Register Any Point (RAP) [Arxiv 2025]" />
+    <meta
+      name="keywords"
+      content="3D deep learning, point cloud registration, flow matching"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+    <title>Rectified Point Flow: Generic Point Cloud Pose Estimation</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔀</text></svg>"
+    />
+
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-1FWSVCGZTG"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+
+      gtag("js", new Date());
+
+      gtag("config", "G-1FWSVCGZTG");
+    </script>
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./css/bulma.min.css" />
+    <link rel="stylesheet" href="./css/bulma-carousel.min.css" />
+    <link rel="stylesheet" href="./css/bulma-slider.min.css" />
+    <link rel="stylesheet" href="./css/twentytwenty.css" />
+    <link rel="stylesheet" href="./css/jquery-ui.min.css" />
+    <link rel="stylesheet" href="./css/index-v5.css" />
+    <link rel="stylesheet" href="./css/pages.css" />
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "./js/three.module.js",
+                "PCDLoader": "./js/PCDLoader.js",
+                "OrbitControls": "./js/OrbitControls.js"
+            }
+        }
+    </script>
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/jquery.event.move.js"></script>
+    <script src="./js/jquery.twentytwenty.js"></script>
+    <script src="./js/jquery-ui.js"></script>
+    <script src="./js/bulma-carousel.min.js"></script>
+    <script src="./js/bulma-slider.min.js"></script>
+    <script src="./js/fontawesome.all.min.js"></script>
+    <script src="./js/pcd-viewer-v5.js" type="module"></script>
+    <script type="module" src="https://esm.sh/gifuct-js@2.1.2"></script>
+    <script src="./js/slider.js" type="module"></script>
+
+    <!--MathJax-->
+    <script>
+      window.MathJax = {
+        loader: {load: ['[tex]/boldsymbol']},
+        tex: {
+          inlineMath: [
+            ["$", "$"],
+            ["\\(", "\\)"],
+          ],
+          packages: {'[+]': ['boldsymbol']}
+        },
+        svg: {
+          fontCache: "global",
+        },
+      };
+    </script>
+    <script
+      type="text/javascript"
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+  </head>
+
+  <body>
+    <section class="hero is-landing">
+      <div class="hero-body">
+        <div class="container is-max-desktop">
+          <div class="landing-card">
+            <div class="landing-intro">
+              <h1 class="title is-2 publication-title">
+                Rectified Point Flow: <br />
+                Generic Point Cloud Pose Estimation
+              </h1>
+            </div>
+            <div class="authors-block" style="margin-top: 1rem;">
+              <div class="authors-list">
+                <span class="author"><a href="https://www.ipb.uni-bonn.de/people/yue-pan/index.html">Yue Pan</a><sup>1</sup></span>
+                <span class="author"><a href="https://taosun.io/">Tao Sun</a><sup>2</sup></span>
+                <span class="author"><a href="https://www.zhuliyuan.net/">Liyuan Zhu</a><sup>2</sup></span>
+                <span class="author"><a href="https://www.ipb.uni-bonn.de/people/lucas-nunes/index.html">Lucas Nunes</a><sup>1</sup></span>
+                <span class="author"><a href="https://ir0.github.io/">Iro Armeni</a><sup>2</sup></span>
+                <span class="author"><a href="https://www.ipb.uni-bonn.de/people/jens-behley/index.html">Jens Behley</a><sup>1</sup></span>
+                <span class="author"><a href="https://www.ipb.uni-bonn.de/people/cyrill-stachniss/index.html">Cyrill Stachniss</a><sup>1</sup></span>
+              </div>
+              <div class="authors-affiliations">
+                <span><sup>1</sup>University of Bonn</span>
+                <span><sup>2</sup>Stanford University</span>
+              </div>
+              <!-- <div class="authors-equal">
+                
+              </div> -->
+            </div>
+            <div class="publication-links hero-links">
+              <span class="link-block">
+                <a
+                  href="https://arxiv.org/abs/xxxx.xxxxx"
+                  rel="noopener noreferrer"
+                  class="external-link button is-normal is-rounded"
+                >
+                  <span class="icon">
+                    <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a
+                  href="https://github.com/GradientSpaces/Rectified-Point-Flow"
+                  rel="noopener noreferrer"
+                  class="external-link button is-normal is-rounded"
+                >
+                  <span class="icon">
+                    <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a
+                  href="https://huggingface.co/gradient-spaces/"
+                  rel="noopener noreferrer"
+                  class="external-link button is-normal is-rounded"
+                >
+                  <span class="icon">&#129303;</span>
+                  <span>Model</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a
+                  href="https://huggingface.co/gradient-spaces/"
+                  rel="noopener noreferrer"
+                  class="external-link button is-normal is-rounded"
+                >
+                  <span class="icon">
+                    <img src="./images/dataset-icon.svg" alt="Dataset icon" width="16" height="16" />
+                  </span>
+                  <span>Dataset</span>
+                </a>
+              </span>
+            </div>
+            <div class="tldr-card">
+              <p class="has-text-centered">
+                Learning a continuous Euclidean-space point flow that <br /> assembles unposed parts and recovers <strong>poses from assembled shapes.</strong>
+              </p>
+            </div>
+            <!-- <div class="tldr-card">
+              <strong>TL;DR:</strong>
+              A point cloud generative model that turns unposed parts into assembled shapes.
+            </div> -->
+          </div>
+          <div class="page-stack">
+
+            <div class="section soft-section" style="margin-top: -2rem;">
+              <div class="container is-max-desktop">
+                <div class="columns is-centered has-text-centered">
+                  <div class="column is-five-fifths">
+                    <div class="">
+                      <h3 class="title is-4 section-title">Abstract</h3>
+                      <div class="has-text-left">
+                        <p>
+                          We introduce <span class="methodname">Rectified Point Flow</span>, a unified parameterization that formulates pairwise point cloud registration and multi-part shape assembly as a single conditional generative problem.
+                          <!-- <br><br> -->
+                          Given unposed point clouds, our method learns a continuous point-wise velocity field that transports noisy points toward their target positions, from which part poses are recovered.
+        In contrast to prior work that regresses part-wise poses with ad-hoc symmetry handling, our method intrinsically learns assembly symmetries without symmetry labels.
+        <br><br>
+        Together with a self-supervised encoder focused on overlapping points, our method achieves a new state-of-the-art performance on six benchmarks spanning pairwise registration and shape assembly.
+        Notably, our unified formulation enables effective joint training on diverse datasets, facilitating the learning of shared geometric priors and consequently boosting accuracy.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+    <!-- Gallery -->
+    <div class="hero teaser gallery-hero" style="margin-top: -6rem;">
+      <div class="is-max-desktop has-text-centered">
+        <div class="">
+          <!-- <h2 class="title is-5"></h2> -->
+
+          <!-- PCD Viewer -->
+          <!-- <div class="viewers-container">
+            <div class="viewer" data-obj="partnet_78">
+              <div class="loading">Loading...</div>
+            </div>
+            <div class="viewer" data-obj="partnet_652">
+              <div class="loading">Loading...</div>
+            </div>
+            <div class="viewer" data-obj="partnet_680" data-ground="-0.45" data-cameraY="0.3">
+              <div class="loading">Loading...</div>
+            </div>
+          </div> -->
+
+          <!-- Global controls for all viewers -->
+          <!-- <div class="controls-bar">
+            <button id="btn-playpause" title="Pause/Play">
+             <img width="14px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAwklEQVR4nO2ZQQ6CMBBF/xIvbeBseArpUUgwTepCy+hYQ0bwvWRWzPym4a06EgAcmpOkQVKSNEtanmou3/rSG537QB68rIRblXs7xeVWDB8ccq9zYG5FajjoGphbsebmu8ozUbkVS2NF5VZwAQP+gBcUMkAhLyhkgEJeUMgAhbygkAEKeUEhAxTygkIGKOQFhQxQyAsKGaDQ3zzupr0/r/cbLSK2yv16FTRutGIaW1dMKoP59tOLZdxUerofyAUA7YwbY5kAc/GDB+8AAAAASUVORK5CYII=" alt="pause"> <span>Pause</span>
+            </button>
+            <button id="btn-autoresample" title="Toggle Re-sample">
+               <img width="20px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAACM0lEQVR4nO2azUobURSAP8EiTd+hEQrtzoKbtrtsahLaV7DNwq3VbTXu20ajPkQg4LbxFWITVy6UCr6DIG5EbbnlCjaMd0z0nLlMzgcHApnJ+Zk75+fegGEYhmEYhmEYxsOZBmrAGvDtkcX95mevIzo+AH3gj5L0gCoR8AzYUXR8UNpAIUvnf2Xo/I3sZRWEnQicv70SVPkYgdODUtEMQD8ChwfFvY4qTKcYcgX8BBqPWAIb/jevAnqvgaJGAGopzpcFdVdSguD6BHFWAwa4pyTNbkD/ioJ+NgIGbCro3wzod7aJ8zVggPtOgmXgCDgBTgP6T/01h8AXIVt46xNOUhJ6I9RwXY5QFS4lG6RGgsLvQromgOMRAvDb3ytGGdgGtoA5SUVAKSX7J1Ujd0+uaA4RgHVyyBRwcA/nXQJ8qmXUay9azAIXAecv/DUqLPjMf+0/a7EWCEBdy4gXwNktxefAKyXdk0A3wfl94ImWAXtZGnDHA3ippJt6YAm65ZnrV3A2piTkE/DMWJehWBuRJjmjFGErWvGt+LZ0Kz7hB4thh5FjwWEkaU/ih5AuYhtH3ymP4/9Y8sltmA2JRWRYyWBD5j/GfktsNfAEOozBpmgtJftLntBUU6rRJyI5GOkIHIx07nEw8hwleiNUBWlxA5oa1QgcHpT3KNOOwOkbaZEBhTv2BbSlm+XwVch4JbRimTwryquhq3AWMRJFX4vrAn+Tcw3YvGapMwzDMAzDMAyD3PIXrhcvcPyJl0UAAAAASUVORK5CYII=" alt="refresh"> <span>Re-sample: On</span>
+            </button>
+          </div> -->
+            <div class="vis-card" style="margin-top: 1rem; width: 110%; margin-left: -5%; padding-top: 1.2rem; padding-bottom: 1rem; padding-left: 5px; padding-right: 5px;">
+              <div class="viewers-container">
+                <!-- JS will inject three viewers here when you click a tab -->
+              </div>
+              
+              <div>
+              <p class="subtitle is-6" style="color: #666; margin-top: 1rem; font-size: 0.95rem; line-height: 1.2;">
+                The model samples new assemblies each time. They show meaningful variation, particularly for symmetric parts.
+                <br>
+                Orbit the viewer to see from different angles. Switch between objects using the buttons below.
+              </p>
+            </div>
+
+            <div class="controls-bar">
+              <button class="tab-button" data-obj="partnet_78">Chair</button>
+              <button class="tab-button" data-obj="partnet_652">Office Chair</button>
+              <button class="tab-button" data-obj="partnet_680">Table</button>
+              
+              <div class="rotate-controls">
+              <button id="btn-rotate" class="rotate-button">
+               Rotate: On
+              </button>
+              <button id="btn-traj" class="rotate-button">
+                Trajectory: Off
+              </button>
+              <button id="btn-pause" class="rotate-button">
+                Pause
+              </button>
+              </div>
+            </div>
+
+          </div>
+      </div>
+    </div>
+
+
+    <div class="section soft-section" style="margin-top: 2rem;">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-five-fifths">
+            <div class="">
+              <h3 class="title is-4 section-title">Framework</h3>
+              <div class="has-text-left mb-2">
+                <p>
+                  Rectified Point Flow supports <span class="emph">shape assembly</span> and <span class="emph">pairwise registration</span> tasks in a single framework. Given a set of unposed part point clouds \(\{\bar {X}_i\}_{i\in\Omega}\), it predicts each part's point cloud at the target assembled state \(\{\hat {X}_i{(0)}\}_{i\in\Omega}\). Subsequently, we solve Procrustes problem via SVD between the condition point cloud \(\bar X_i\) and the estimated point cloud \(\hat X_i(0)\) to recover the rigid transformation \(\hat T_i\) for each non-anchored part.
+                </p>
+              </div>
+              <div class="columns is-centered has-text-centered" style="margin-top: 1rem;"></div>
+                <div class="column is-fullwidth">
+                  <div class="publication-teaser">
+                    <img
+                      src="images/overview_flow_asm.png"
+                      alt="ReStyle3D method teaser figure"
+                      class="publication-teaser-img framed-image"
+                      style="width: 100%;"
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section pt-0 soft-section">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-five-fifths">
+            <!-- Abstract -->
+            <!-- <h3 class="title is-3">Abstract</h3>
+            <div class="content has-text-left">
+              <p>
+                We introduce 
+              </p>
+            </div> -->
+
+            <!-- Method. -->
+            <!-- <h2 class="title is-3">How it works</h2>
+            <div class="content has-text-left">
+              <div class="columns is-centered " style="align-items: center;">
+                <div class="column is-half">
+                  <img
+                    id="method_inference_1"
+                    width="100%"
+                    src="./images/stage1.gif"
+                    alt="Method Stage 1"
+                  />
+                  <p class="figure-caption is-centered">Stage 1: Overlap-aware Pretraining</p>
+                </div>
+                <div class="column is-half">
+                  <img
+                    id="method_inference_2"
+                    width="100%"
+                    src="./images/stage2.gif"
+                    alt="Method Stage 2"
+                  />
+                  <p class="figure-caption">Stage 2: Point Flow in Euclidean Space</p>
+                </div>
+              </div>
+            </div>
+              <div class="content has-text-left">
+              <p>
+                <b
+                  >Two-stage approach of Pipeline. 
+                  </b>
+                  Method
+              </p>
+              </div> -->
+              <!-- Quantitative table -->
+              <div class="section" style="margin-top: -4rem;">
+                <div class="container is-max-desktop has-text-centered is-centered">
+              <h2 class="title is-4 has-text-centered section-title">Multi-part Shape Assembly</h2>
+
+              <p class="has-text-left" style="padding-bottom: 2rem; margin: 0 auto;">
+                We evaluate our method on the multi-part shape assembly task, where the goal is to estimate the poses of multiple parts given their unposed point clouds.
+                
+                <br><br>
+                Columns show objects with increasing number of parts (left to right). Rows display (1) colored input point clouds of each part, (2) GARF outputs (dashed boxes indicate samples limited to 20 by GARF’s design, selecting the top 20 parts by volume), (3) Rectified Point Flow outputs, and (4) ground-truth assemblies. Compared to GARF, our method produces more accurate pose estimation on most parts, especially as the number of parts increases.
+              </p>
+
+              <!-- column labels -->
+              <!-- the full‐width composite figure -->
+              <div class="columns is-centered has-text-centered" style="margin-top: 1rem;">
+                <figure class="image is-fullwidth">
+                  <img
+                    id="comparison"
+                    src="./images/result_assembly.png"
+                    alt="Comparison with other methods"
+                    style="width: 100%; display: block; margin: 0 auto;"
+                    class="framed-image"
+                  >
+                  <figcaption>
+                    <!-- <strong>Image appearance transfer results.</strong> -->
+                    <!-- Our method  -->
+                  </figcaption>
+                </figure>
+              </div>
+              </div>
+              </div>
+
+              <!-- <section class="section">
+              <h2 class="title is-4 has-text-centered">Pairwise Registration</h2>
+
+              <figure class="image is-fullwidth">
+                <img
+                  id="comparison"
+                  src="./images/result_registration.png"
+                  alt="Comparison with other methods"
+                >
+                <figcaption>
+                </figcaption>
+              </figure>
+              </section> -->
+
+              <div class="section">
+                <div class="container is-max-desktop" style="margin: 0 auto; margin-top: 1rem;">
+              <h2 class="title is-4 has-text-centered section-title">Linear Interpolation in Noise Space</h2>
+              <p class="has-text-left" style="padding-bottom: 2rem; margin: 0 auto;">
+                We visualize the linear interpolation in the noise space by generating the assembled point cloud from \( Z(s) \), where  \( Z(s) \) interpolates linearly between two Gaussian noise vectors \( Z_0 \) and \( Z_1 \). We observe a continuous, semantically meaningful
+mapping from Gaussian noise to valid assemblies.
+              </p>
+
+              <h2 class="title is-6 mb-2 has-text-left">Part Interchanging</h2>
+              <div class="columns is-centered has-text-centered">
+                <div class="slider-container"
+                    data-gif-url="images/linear_interpolation_2.gif"
+                    data-frame-start="0"
+                    data-frame-end="21"
+                >
+                  <!-- ─── CANVAS ROW ─── -->
+                  <div class="canvas-row">
+                    <div class="slider-block start-block">
+                      <canvas class="start-canvas"></canvas>
+                      <div class="slider-caption">Generated from <br>\(Z_0\)</div>
+                    </div>
+                    <div class="slider-block middle-block">
+                      <canvas class="middle-canvas"></canvas>
+                      <div class="slider-caption middle-caption">
+                        Generated from <br>\(Z(s) = (1 - s) Z_0 + s Z_1\)
+                      </div>
+                    </div>
+                    <div class="slider-block end-block">
+                      <canvas class="end-canvas"></canvas>
+                      <div class="slider-caption">Generated from <br>\(Z_1\)</div>
+                    </div>
+                  </div>
+
+                  <!-- ─── INFO BAR: “s = …” + slider ─── -->
+                  <div class="info-bar">
+                    <div class="s-display">
+                      \( s = \)<span class="s-value">0.00</span>
+                    </div>
+                    <input
+                      type="range"
+                      class="frame-slider"
+                      aria-label="Frame slider"
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <h2 class="title is-6 mb-2 has-text-left">Structural Changing</h2>
+              <div class="columns is-centered has-text-centered">
+                <div class="slider-container"
+                    data-gif-url="images/linear_interpolation_1.gif"
+                    data-frame-start="0"
+                    data-frame-end="21"
+                >
+                  <!-- ─── CANVAS ROW ─── -->
+                  <div class="canvas-row">
+                    <div class="slider-block start-block">
+                      <canvas class="start-canvas"></canvas>
+                      <div class="slider-caption">Generated from <br>\(Z_0\)</div>
+                    </div>
+                    <div class="slider-block middle-block">
+                      <canvas class="middle-canvas"></canvas>
+                      <div class="slider-caption middle-caption">
+                        Generated from <br>\(Z(s) = (1 - s) Z_0 + s Z_1\)
+                      </div>
+                    </div>
+                    <div class="slider-block end-block">
+                      <canvas class="end-canvas"></canvas>
+                      <div class="slider-caption">Generated from <br>\(Z_1\)</div>
+                    </div>
+                  </div>
+
+                  <!-- ─── INFO BAR: “s = …” + slider ─── -->
+                  <div class="info-bar">
+                    <div class="s-display">
+                      \( s = \)<span class="s-value">0.00</span>
+                    </div>
+                    <input
+                      type="range"
+                      class="frame-slider"
+                      aria-label="Frame slider"
+                    />
+                  </div>
+                </div>
+              </div>
+              </div>
+              </div>
+
+              <div class="section">
+              <h2 class="title is-4 has-text-centered section-title">Generalization to Unseen Assemblies</h2>
+
+                  <div class="columns is-centered" style="gap: 1rem;">
+
+                <!-- Visual Effects. -->
+                <div class="column is-max-desktop">
+                  <div class="content has-text-left">
+                    <h2 class="title is-6 mb-2">Parts from Same Categories</h2>
+                    <p style="text-align: justify;">
+                      We test the model’s ability to generalize to unseen assemblies composed of parts from two different objects within the same category. 
+                      Our results show that the model captures the underlying geometry of the category and can successfully re-target parts to construct a coherent shape belonging to that category.
+                    </p>
+                    <img
+                      id="comparison"
+                      style="margin: 10px auto;"
+                      src="./images/merge_object_same.png"
+                      alt="Comparison with other methods"
+                      class="framed-image"
+                    >
+                  </div>
+                </div>
+                <!--/ Visual Effects. -->
+
+                <!-- Matting. -->
+                <div class="column">
+                  <div class="content has-text-left">
+                  <h2 class="title is-6 mb-2">Parts from Different Categories</h2>
+                  <div class="columns is-centered">
+                    <div class="column content">
+                      <p style="text-align:justify;">
+                        Surprisingly, our method can also generalize to certain parts from different categories, which is particularly challenging. 
+                        This indicates that the model can reason about part compositionality and re-target parts to produce a plausible final shape, even when some parts originate from completely different categories.
+                      </p>
+                    <img
+                      id="comparison"
+                      style="margin: 10px auto;"
+                      src="./images/merge_object_diff.png"
+                      alt="Comparison with other methods"
+                      class="framed-image"
+                    >
+                      
+                    </div>
+
+                    
+
+                  </div>
+                </div>
+              </div>
+              <!--/ Matting. -->
+              
+              </figure>
+              </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <section>
+      <div class="container is-max-desktop has-text-centered">
+      <h3 class="title is-4" id="mesh">Stylized Reconstruction</h3>
+        <h3 class="title is-7">Please make sure "use hardware acceleration when available" is enabled for chrome and WebGL is enabled in Safari.</h3>
+        <div class="embed-responsive embed-responsive-16by9">
+
+          <iframe width="960" height="640" src="https://sketchfab.com/playlists/embed?collection=f4c4bcbc9ee94aac81f73b43fbfbb8e0&autostart=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" mozallowfullscreen="true" webkitallowfullscreen="true" width="100%" height="100%" frameborder="0"></iframe>
+        </div></div>
+
+    </section> -->
+    
+    <div class="section soft-section" id="concurrent-works" style="margin-top: -80px;">
+      <div class="container is-max-desktop content px-2">
+        <h3 class="title is-4 section-title">Concurrent Works</h3>
+          <p>
+            We are pleased to see several concurrent works that explore flow matching for pose estimation. Check them as well!
+            <br>
+            - <a href="https://ai4ce.github.io/GARF/">GARF: Learning Generalizable 3D Reassembly for Real-World Fractures
+          </a> combines fracture-aware pretraining with a flow matching model to predict SE(3) poses for parts.
+            <br>
+            - <a href="https://arxiv.org/abs/2505.21539v1">Equivariant Flow Matching for Point Cloud Assembly</a> handles part symmetry like ours, but with a proposed equivariant flow model working on top of an SE(3)-equivariant encoder.
+          </p>
+      </div>
+    </div>
+
+
+    <div class="section soft-section" id="BibTeX" style="margin-top: -30px;">
+      <div class="container is-max-desktop content px-2">
+        <h3 class="title section-title">BibTeX</h3>
+        <pre><code>@inproceedings{sun2025_rpf,
+      author = {Sun, Tao and Zhu, Liyuan and Huang, Shengyu and Song, Shuran and Armeni, Iro},
+      title = {Rectified Point Flow: Generic Point Cloud Pose Estimation},
+      booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+      year = {2025},
+}</code></pre>
+      </div>
+    </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <footer class="footer pt-4 pb-0">
+      <div class="container">
+        <div class="columns is-centered">
+          <div class="column is-8">
+            <div class="content has-text-centered">
+              <p>
+                Website template based on
+                <a href="https://github.com/nerfies/nerfies.github.io">
+                  Nerfies
+                </a>
+                and licensed under
+                <a
+                  rel="license"
+                  href="http://creativecommons.org/licenses/by-sa/4.0/"
+                >
+                  CC-BY-SA-4.0 </a
+                >.
+              </p>
+            </div>
+            <div style="display: none;">
+              <script type="text/javascript" id="clustrmaps" src="//cdn.clustrmaps.com/map_v2.js?cl=ffffff&w=70&t=n&d=6WCwDMU1LnufigbJtLnJnd3NXofUi6tlIPZD58PdhFg&co=ffffff&cmo=ffffff&cmn=ffffff&ct=ffffff"></script>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
