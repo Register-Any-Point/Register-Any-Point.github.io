@@ -158,7 +158,7 @@
             </div>
             <div class="tldr-card">
               <p class="has-text-centered">
-                Accomplish single-stage multi-view point cloud registration at various scales by flow matching
+                Accomplish single-stage multi-view point cloud registration at various scales by flow matching-based generation
               </p>
             </div>
             <!-- <div class="tldr-card">
@@ -202,14 +202,7 @@
         <div class="columns is-centered has-text-centered">
           <div class="column is-five-fifths">
             <div class="">
-              <h3 class="title is-4 section-title">Framework</h3>
-              <div class="has-text-left mb-2">
-                <p>
-                  <br>Our method for scalable multi-view point cloud registration.</br> To register multiple unposed point clouds, prior work typically first performs correspondence matching and then optimizes a pose graph (top-left).
-                  In contrast, we introduce a single-stage model that directly generates the registered point cloud via flow matching in Euclidean space (top-right), bypassing the need for explicit correspondence matching and pose graph optimization.
-               Our model generalizes across diverse point cloud data from object-centric, indoor, and outdoor scenarios at scan, sub-map, and map levels (bottom).
-                </p>
-              </div>
+              <h3 class="title is-4 section-title">Overview</h3>
               <div class="columns is-centered has-text-centered" style="margin-top: 1rem;"></div>
                 <div class="column is-fullwidth">
                   <div class="publication-teaser">
@@ -221,6 +214,13 @@
                     >
                   </div>
                 </div>
+              <div class="has-text-left mb-2" style="margin-top: 1rem;">
+                <p>
+                  <strong>Our method for scalable multi-view point cloud registration.</strong> To register multiple unposed point clouds, prior work typically first performs correspondence matching and then optimizes a pose graph (top-left).
+                  In contrast, we introduce a single-stage model that directly generates the registered point cloud via flow matching in Euclidean space (top-right), bypassing the need for explicit correspondence matching and pose graph optimization.
+               Our model generalizes across diverse point cloud data from object-centric, indoor, and outdoor scenarios at scan, sub-map, and map levels (bottom).
+                </p>
+              </div>
               </div>
             </div>
           </div>
@@ -233,7 +233,7 @@
       <div class="container is-max-desktop content px-2">
         <h3 class="title is-4 section-title">Acknowledgments</h3>
           <p>
-            This work is built upon [Rectified Point Flow](https://arxiv.org/abs/2506.05282).
+            This work is built upon <a href="https://arxiv.org/abs/2506.05282">Rectified Point Flow</a>.
           </p>
       </div>
     </div>
