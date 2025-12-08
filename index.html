@@ -228,12 +228,45 @@
       </div>
     </div>
 
+    <div class="section soft-section" style="margin-top: 1rem;">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-five-fifths">
+            <div class="">
+              <h3 class="title is-4 section-title">Method</h3>
+              <div class="columns is-centered has-text-centered" style="margin-top: 1rem;"></div>
+                <div class="column is-fullwidth">
+                  <div class="publication-teaser">
+                    <img
+                      src="images/overview_rap.png"
+                      alt="our method overview figure"
+                      class="publication-teaser-img framed-image"
+                      style="width: 100%;"
+                    >
+                  </div>
+                </div>
+              <div class="has-text-left mb-2" style="margin-top: 1rem;">
+                <p>
+                  <strong>Overview of our approach to multi-view point cloud registration.</strong> Starting with unposed point clouds, we sample points with corresponding local features. 
+                  We use a diffusion transformer with alternating-attention blocks for conditional flow matching that generates the aggregated point cloud from Gaussian noise.
+                  Finally, we recover the individual transformations using SVD from the aggregated point cloud and apply them to the original unposed point clouds to get the registered point clouds.
+                </p>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     
-    <div class="section soft-section" id="concurrent-works" style="margin-top: -80px;">
+    <div class="section soft-section" id="concurrent-works" style="margin-top: -20px;">
       <div class="container is-max-desktop content px-2">
         <h3 class="title is-4 section-title">Acknowledgments</h3>
           <p>
-            This work is built upon <a href="https://rectified-pointflow.github.io/">Rectified Point Flow</a>.
+            This work is built upon <a href="https://rectified-pointflow.github.io/">Rectified Point Flow</a>. 
+            
+            We also thank the authors of the following works: <a href="https://github.com/MIT-SPARK/BUFFER-X">BUFFER-X</a> and <a href="https://ai4ce.github.io/GARF/">GARF</a>.
           </p>
       </div>
     </div>
