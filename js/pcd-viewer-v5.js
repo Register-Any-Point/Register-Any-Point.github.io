@@ -1,13 +1,17 @@
 // 1) IMPORTS (ensure your bundler or <script type="module"> can find these)
 import * as THREE from 'three';
 import { PCDLoader } from 'PCDLoader';
+import { PLYLoader } from 'PLYLoader';
 import { OrbitControls } from 'OrbitControls';
 
 // 2) SAMPLE MAP + FRAME PARAMETERS
 const sampleMap = {
-  partnet_78:  ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19'],
-  partnet_652: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19'],
-  partnet_680: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19']
+  oxford: ['0']  // Only one sample for oxford
+};
+
+// File format mapping (determines which loader to use)
+const fileFormatMap = {
+  oxford: 'ply'
 };
 
 // OUTSIDE—at module scope, create and reuse these:
@@ -20,10 +24,20 @@ const _trajSphereMat = new THREE.MeshBasicMaterial({
 });
 
 const viewerParams = {
-  partnet_78:  { groundHeight: -0.8, cameraY: 1.5  },
-  partnet_652: { groundHeight: -0.85, cameraY: 1.5  },
-  partnet_680: { groundHeight: -0.45, cameraY: 1.0  }
+  oxford: { groundHeight: -2.0, cameraY: 3.0 }  // Adjust based on oxford data scale
 };
+
+// File prefix mapping - stores the prefix before "_sample" for each object
+// This allows different objects to have different prefixes
+// Update this map when adding new objects with different file naming patterns
+const filePrefixMap = {
+  oxford: 'input_20251210_211522'  // Default for oxford - update for different objects
+};
+
+// Helper function to get file prefix for an object
+function getFilePrefix(objName) {
+  return filePrefixMap[objName] || '';
+}
 
 const totalFrames   = 20;    // steps per sample
 const frameInterval = 40;    // ms per frame
@@ -60,18 +74,35 @@ let inputState = null;
 let sampledStates = [];
 let allStates = [];
 
-const globalLoader = new PCDLoader();
+const globalPCDLoader = new PCDLoader();
+const globalPLYLoader = new PLYLoader();
+
+// Helper function to get the appropriate loader based on object name
+function getLoader(objName) {
+  const format = fileFormatMap[objName] || 'pcd';
+  return format === 'ply' ? globalPLYLoader : globalPCDLoader;
+}
+
+// Helper function to get file extension based on object name
+function getFileExtension(objName) {
+  const format = fileFormatMap[objName] || 'pcd';
+  return format === 'ply' ? 'ply' : 'pcd';
+}
 
 // --- TRAJ GLOBALS ---
 let showTrajectories = false;    // tracks whether trajectories should be visible
 // (Each viewer state will keep its own `trajectorySpheres` array.)
 
-// 5) UTILITY: PICK TWO DISTINCT RANDOM SAMPLES (unchanged)
+// 5) UTILITY: PICK TWO DISTINCT RANDOM SAMPLES
 function pickTwoRandomSamples(objName) {
   const arr = sampleMap[objName];
-  if (!arr || arr.length < 2) {
-    console.error(`Need ≥2 samples for "${objName}".`);
-    return arr.slice(0, 2);
+  if (!arr || arr.length === 0) {
+    console.error(`No samples available for "${objName}".`);
+    return ['0', '0'];
+  }
+  if (arr.length === 1) {
+    // For datasets with only one sample (like oxford), both viewers use the same sample
+    return [arr[0], arr[0]];
   }
   const copy = arr.slice();
   for (let i = copy.length - 1; i > 0; i--) {
@@ -194,24 +225,52 @@ function initInputViewer(container, objName) {
     }
   });
 
-  // LOAD “pcd/${objName}/input.pcd” and build InstancedMesh of spheres
-  const pcdUrl = `pcd/${objName}/input.pcd`;
-  globalLoader.load(
-    pcdUrl,
+  // LOAD input file - use {prefix}_sample{sampleId}_input_merged.ply pattern for PLY, input.pcd for PCD
+  const fileExt = getFileExtension(objName);
+  const loader = getLoader(objName);
+  let inputUrl;
+  
+  if (fileExt === 'ply') {
+    // For PLY files, use the pattern: {prefix}_sample{sampleId}_input_merged.ply
+    const sampleId = sampleMap[objName]?.[0] || '0';
+    const sampleIdStr = String(sampleId).padStart(5, '0');
+    const prefix = getFilePrefix(objName);
+    
+    if (!prefix) {
+      console.error(`No file prefix configured for ${objName}. Please set filePrefixMap[${objName}] with the prefix (part before '_sample')`);
+      loading.innerText = 'Error: Missing file prefix configuration';
+      return {
+        container,
+        scene,
+        camera,
+        renderer,
+        controls,
+        mesh: null,
+        isSampled: false
+      };
+    }
+    
+    inputUrl = `pcd/${objName}/${prefix}_sample${sampleIdStr}_input_merged.${fileExt}`;
+  } else {
+    inputUrl = `pcd/${objName}/input.${fileExt}`;
+  }
+  
+  loader.load(
+    inputUrl,
     (points) => {
       const geom = points.geometry;
       const posAttr = geom.attributes.position;
-      const lblAttr = geom.attributes.label;
+      const colorAttr = geom.attributes.color;
 
       if (!posAttr) {
-        console.error(`No position attribute in ${pcdUrl}`);
+        console.error(`No position attribute in ${inputUrl}`);
         loading.innerText = 'Error';
         return;
       }
 
       const positions = posAttr.array;
       const N = positions.length / 3;
-      const labels = lblAttr ? lblAttr.array : null;
+      const colors = colorAttr ? colorAttr.array : null;
       const sphereGeo = new THREE.SphereGeometry(0.01, 6, 4);
       const mat = new THREE.MeshStandardMaterial({
         transparent: true,
@@ -227,13 +286,6 @@ function initInputViewer(container, objName) {
       const dummyMatrix = new THREE.Matrix4();
       const color = new THREE.Color();
 
-      let maxLabel = 0;
-      if (labels) {
-        for (let i = 0; i < N; i++) {
-          if (labels[i] > maxLabel) maxLabel = labels[i];
-        }
-      }
-
       for (let i = 0; i < N; i++) {
         const x = positions[3 * i];
         const y = positions[3 * i + 1];
@@ -241,13 +293,14 @@ function initInputViewer(container, objName) {
         dummyMatrix.makeTranslation(x, y, z);
         instMesh.setMatrixAt(i, dummyMatrix);
 
-        if (labels) {
-          const lbl = labels[i];
-          const hue = maxLabel > 0 ? (lbl / maxLabel) * 0.8 : 0;
-          const hue_remap = (hue + 0.548) % 1;
-          const [r, g, b] = hsvToRgb(hue_remap, 0.62, 0.46);
+        if (colors) {
+          // Use original colors from point cloud
+          const r = colors[3 * i];
+          const g = colors[3 * i + 1];
+          const b = colors[3 * i + 2];
           color.setRGB(r, g, b);
         } else {
+          // Fall back to gray if no colors available
           color.setRGB(0.5, 0.5, 0.5);
         }
         instMesh.setColorAt(i, color);
@@ -262,7 +315,7 @@ function initInputViewer(container, objName) {
     },
     () => { /* ignore progress */ },
     (err) => {
-      console.error(`Error loading input PCD ${pcdUrl}:`, err);
+      console.error(`Error loading input file ${inputUrl}:`, err);
       loading.innerText = 'Error';
     }
   );
@@ -410,6 +463,11 @@ function initSampledViewer(container, objName, initialSampleId) {
     } while (choice === state.currentSampleId);
     return choice;
   }
+  
+  // For oxford, we only have one sample, so always return '0'
+  if (objName === 'oxford') {
+    state.pickRandom = () => '0';
+  }
 
   // Helper: build an interpolated InstancedMesh for frames (unchanged)
   function buildInterpolatedMesh(t0, t1) {
@@ -477,8 +535,31 @@ function initSampledViewer(container, objName, initialSampleId) {
     const newPositions = new Array(totalFrames).fill(null);
     let sphereGeo = null;
 
+    const fileExt = getFileExtension(objName);
+    const loader = getLoader(objName);
+    
+    const prefix = getFilePrefix(objName);
+    
     for (let t = 0; t < totalFrames; t++) {
-      const url = `pcd/${objName}/sample_${sampleId}/step_${t}.pcd`;
+      // Handle different file naming patterns
+      let url;
+      if (fileExt === 'ply') {
+        // For PLY files, use pattern: {prefix}_sample{sampleId}_generation00_step{step}_endpoint_merged.ply
+        const stepStr = String(t).padStart(3, '0');
+        const sampleIdStr = String(sampleId).padStart(5, '0');
+        
+        if (!prefix) {
+          console.error(`No file prefix configured for ${objName}. Please set filePrefixMap[${objName}]`);
+          newMeshes[t] = null;
+          newPositions[t] = null;
+          resolve();
+          return;
+        }
+        
+        url = `pcd/${objName}/${prefix}_sample${sampleIdStr}_generation00_step${stepStr}_endpoint_merged.${fileExt}`;
+      } else {
+        url = `pcd/${objName}/sample_${sampleId}/step_${t}.${fileExt}`;
+      }
 
       if (state.session !== currentSession) {
         for (let k = 0; k < t; k++) {
@@ -491,12 +572,12 @@ function initSampledViewer(container, objName, initialSampleId) {
       }
 
       await new Promise((resolve) => {
-        globalLoader.load(
+        loader.load(
           url,
           (points) => {
             const geom = points.geometry;
             const posAttr = geom.attributes.position;
-            const lblAttr = geom.attributes.label;
+            const colorAttr = geom.attributes.color;
             if (!posAttr) {
               console.error(`No position attribute in ${url}`);
               newMeshes[t] = null;
@@ -507,6 +588,7 @@ function initSampledViewer(container, objName, initialSampleId) {
 
             const positions = posAttr.array;
             const N = positions.length / 3;
+            const colors = colorAttr ? colorAttr.array : null;
             if (t === 0) {
               state.N_points = N;
             }
@@ -527,13 +609,6 @@ function initSampledViewer(container, objName, initialSampleId) {
             const dummyMatrix = new THREE.Matrix4();
             const color = new THREE.Color();
 
-            let maxLabel = 0;
-            if (lblAttr) {
-              for (let i = 0; i < N; i++) {
-                if (lblAttr.array[i] > maxLabel) maxLabel = lblAttr.array[i];
-              }
-            }
-
             for (let i = 0; i < N; i++) {
               const x = positions[3 * i];
               const y = positions[3 * i + 1];
@@ -541,13 +616,14 @@ function initSampledViewer(container, objName, initialSampleId) {
               dummyMatrix.makeTranslation(x, y, z);
               instMesh.setMatrixAt(i, dummyMatrix);
 
-              if (lblAttr) {
-                const lbl = lblAttr.array[i];
-                const hue = maxLabel > 0 ? (lbl / maxLabel) * 0.8 : 0;
-                const hue_remap = (hue + 0.548) % 1;
-                const [r, g, b] = hsvToRgb(hue_remap, 0.62, 0.46);
+              if (colors) {
+                // Use original colors from point cloud
+                const r = colors[3 * i];
+                const g = colors[3 * i + 1];
+                const b = colors[3 * i + 2];
                 color.setRGB(r, g, b);
               } else {
+                // Fall back to gray if no colors available
                 color.setRGB(0.5, 0.5, 0.5);
               }
               instMesh.setColorAt(i, color);
@@ -620,7 +696,9 @@ function initSampledViewer(container, objName, initialSampleId) {
   }
 
   state.currentSampleId = initialSampleId;
-  state.pickRandom = pickRandomSample;
+  if (objName !== 'oxford') {
+    state.pickRandom = pickRandomSample;
+  }
   state.loadSample = loadSample;
 
   // Initially load the first sample and show frame 0
@@ -755,14 +833,22 @@ function advanceAllFrames(session) {
     const curr1 = sampledStates[1].currentSampleId;
 
     let newId0;
-    do {
-      newId0 = sampledStates[0].pickRandom();
-    } while (newId0 === curr1);
+    if (sampledStates[0].pickRandom) {
+      do {
+        newId0 = sampledStates[0].pickRandom();
+      } while (newId0 === curr1);
+    } else {
+      newId0 = curr0; // For oxford, keep the same sample
+    }
 
     let newId1;
-    do {
-      newId1 = sampledStates[1].pickRandom();
-    } while (newId1 === curr0 || newId1 === newId0);
+    if (sampledStates[1].pickRandom) {
+      do {
+        newId1 = sampledStates[1].pickRandom();
+      } while (newId1 === curr0 || newId1 === newId0);
+    } else {
+      newId1 = curr1; // For oxford, keep the same sample
+    }
 
     // Kick off prefetch (showLoading=false)
     const prefetchPromise0 = sampledStates[0].loadSample(newId0, false);
@@ -1203,8 +1289,8 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Show the first object by default
-  selectObject('partnet_652');
+  // Show oxford by default
+  selectObject('oxford');
 
   // Start the render loop
   animateAll();
