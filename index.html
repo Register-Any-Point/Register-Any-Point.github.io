@@ -200,6 +200,68 @@
       </div>
     </div>
 
+    <!-- Gallery -->
+   <div class="hero teaser gallery-hero" style="margin-top: -1rem;">
+    <div class="is-max-desktop has-text-centered">
+      <div class="">
+        <!-- <h2 class="title is-5"></h2> -->
+
+        <!-- PCD Viewer -->
+        <!-- <div class="viewers-container">
+          <div class="viewer" data-obj="partnet_78">
+            <div class="loading">Loading...</div>
+          </div>
+          <div class="viewer" data-obj="partnet_652">
+            <div class="loading">Loading...</div>
+          </div>
+          <div class="viewer" data-obj="partnet_680" data-ground="-0.45" data-cameraY="0.3">
+            <div class="loading">Loading...</div>
+          </div>
+        </div> -->
+
+        <!-- Global controls for all viewers -->
+        <!-- <div class="controls-bar">
+          <button id="btn-playpause" title="Pause/Play">
+           <img width="14px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAwklEQVR4nO2ZQQ6CMBBF/xIvbeBseArpUUgwTepCy+hYQ0bwvWRWzPym4a06EgAcmpOkQVKSNEtanmou3/rSG537QB68rIRblXs7xeVWDB8ccq9zYG5FajjoGphbsebmu8ozUbkVS2NF5VZwAQP+gBcUMkAhLyhkgEJeUMgAhbygkAEKeUEhAxTygkIGKOQFhQxQyAsKGaDQ3zzupr0/r/cbLSK2yv16FTRutGIaW1dMKoP59tOLZdxUerofyAUA7YwbY5kAc/GDB+8AAAAASUVORK5CYII=" alt="pause"> <span>Pause</span>
+          </button>
+          <button id="btn-autoresample" title="Toggle Re-sample">
+             <img width="20px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAACM0lEQVR4nO2azUobURSAP8EiTd+hEQrtzoKbtrtsahLaV7DNwq3VbTXu20ajPkQg4LbxFWITVy6UCr6DIG5EbbnlCjaMd0z0nLlMzgcHApnJ+Zk75+fegGEYhmEYhmEYxsOZBmrAGvDtkcX95mevIzo+AH3gj5L0gCoR8AzYUXR8UNpAIUvnf2Xo/I3sZRWEnQicv70SVPkYgdODUtEMQD8ChwfFvY4qTKcYcgX8BBqPWAIb/jevAnqvgaJGAGopzpcFdVdSguD6BHFWAwa4pyTNbkD/ioJ+NgIGbCro3wzod7aJ8zVggPtOgmXgCDgBTgP6T/01h8AXIVt46xNOUhJ6I9RwXY5QFS4lG6RGgsLvQromgOMRAvDb3ytGGdgGtoA5SUVAKSX7J1Ujd0+uaA4RgHVyyBRwcA/nXQJ8qmXUay9azAIXAecv/DUqLPjMf+0/a7EWCEBdy4gXwNktxefAKyXdk0A3wfl94ImWAXtZGnDHA3ippJt6YAm65ZnrV3A2piTkE/DMWJehWBuRJjmjFGErWvGt+LZ0Kz7hB4thh5FjwWEkaU/ih5AuYhtH3ymP4/9Y8sltmA2JRWRYyWBD5j/GfktsNfAEOozBpmgtJftLntBUU6rRJyI5GOkIHIx07nEw8hwleiNUBWlxA5oa1QgcHpT3KNOOwOkbaZEBhTv2BbSlm+XwVch4JbRimTwryquhq3AWMRJFX4vrAn+Tcw3YvGapMwzDMAzDMAyD3PIXrhcvcPyJl0UAAAAASUVORK5CYII=" alt="refresh"> <span>Re-sample: On</span>
+          </button>
+        </div> -->
+          <div class="vis-card" style="margin-top: 1rem; width: 110%; margin-left: -5%; padding-top: 1.2rem; padding-bottom: 1rem; padding-left: 5px; padding-right: 5px;">
+            <div class="viewers-container">
+              <!-- JS will inject three viewers here when you click a tab -->
+            </div>
+            
+            <div>
+            <p class="subtitle is-6" style="color: #666; margin-top: 1rem; font-size: 0.95rem; line-height: 1.2;">
+              Orbit the viewer to see from different angles. Switch between objects using the buttons below.
+            </p>
+          </div>
+
+          <div class="controls-bar">
+            <!-- <button class="tab-button" data-obj="partnet_78">Chair</button>
+            <button class="tab-button" data-obj="partnet_652">Office Chair</button>
+            <button class="tab-button" data-obj="partnet_680">Table</button> -->
+            <button class="tab-button" data-obj="oxford">Oxford</button>
+            
+            <div class="rotate-controls">
+            <button id="btn-rotate" class="rotate-button">
+             Rotate: On
+            </button>
+            <button id="btn-traj" class="rotate-button">
+              Trajectory: Off
+            </button>
+            <button id="btn-pause" class="rotate-button">
+              Pause
+            </button>
+            </div>
+          </div>
+
+        </div>
+    </div>
+  </div>
+
     <div class="section soft-section" style="margin-top: 1rem;">
       <div class="container is-max-desktop">
         <div class="columns is-centered has-text-centered">
@@ -260,65 +322,7 @@
       </div>
     </div>
 
-    <!-- Gallery -->
-    <div class="hero teaser gallery-hero" style="margin-top: -6rem;">
-      <div class="is-max-desktop has-text-centered">
-        <div class="">
-          <!-- <h2 class="title is-5"></h2> -->
-
-          <!-- PCD Viewer -->
-          <!-- <div class="viewers-container">
-            <div class="viewer" data-obj="partnet_78">
-              <div class="loading">Loading...</div>
-            </div>
-            <div class="viewer" data-obj="partnet_652">
-              <div class="loading">Loading...</div>
-            </div>
-            <div class="viewer" data-obj="partnet_680" data-ground="-0.45" data-cameraY="0.3">
-              <div class="loading">Loading...</div>
-            </div>
-          </div> -->
-
-          <!-- Global controls for all viewers -->
-          <!-- <div class="controls-bar">
-            <button id="btn-playpause" title="Pause/Play">
-             <img width="14px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAwklEQVR4nO2ZQQ6CMBBF/xIvbeBseArpUUgwTepCy+hYQ0bwvWRWzPym4a06EgAcmpOkQVKSNEtanmou3/rSG537QB68rIRblXs7xeVWDB8ccq9zYG5FajjoGphbsebmu8ozUbkVS2NF5VZwAQP+gBcUMkAhLyhkgEJeUMgAhbygkAEKeUEhAxTygkIGKOQFhQxQyAsKGaDQ3zzupr0/r/cbLSK2yv16FTRutGIaW1dMKoP59tOLZdxUerofyAUA7YwbY5kAc/GDB+8AAAAASUVORK5CYII=" alt="pause"> <span>Pause</span>
-            </button>
-            <button id="btn-autoresample" title="Toggle Re-sample">
-               <img width="20px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAACM0lEQVR4nO2azUobURSAP8EiTd+hEQrtzoKbtrtsahLaV7DNwq3VbTXu20ajPkQg4LbxFWITVy6UCr6DIG5EbbnlCjaMd0z0nLlMzgcHApnJ+Zk75+fegGEYhmEYhmEYxsOZBmrAGvDtkcX95mevIzo+AH3gj5L0gCoR8AzYUXR8UNpAIUvnf2Xo/I3sZRWEnQicv70SVPkYgdODUtEMQD8ChwfFvY4qTKcYcgX8BBqPWAIb/jevAnqvgaJGAGopzpcFdVdSguD6BHFWAwa4pyTNbkD/ioJ+NgIGbCro3wzod7aJ8zVggPtOgmXgCDgBTgP6T/01h8AXIVt46xNOUhJ6I9RwXY5QFS4lG6RGgsLvQromgOMRAvDb3ytGGdgGtoA5SUVAKSX7J1Ujd0+uaA4RgHVyyBRwcA/nXQJ8qmXUay9azAIXAecv/DUqLPjMf+0/a7EWCEBdy4gXwNktxefAKyXdk0A3wfl94ImWAXtZGnDHA3ippJt6YAm65ZnrV3A2piTkE/DMWJehWBuRJjmjFGErWvGt+LZ0Kz7hB4thh5FjwWEkaU/ih5AuYhtH3ymP4/9Y8sltmA2JRWRYyWBD5j/GfktsNfAEOozBpmgtJftLntBUU6rRJyI5GOkIHIx07nEw8hwleiNUBWlxA5oa1QgcHpT3KNOOwOkbaZEBhTv2BbSlm+XwVch4JbRimTwryquhq3AWMRJFX4vrAn+Tcw3YvGapMwzDMAzDMAyD3PIXrhcvcPyJl0UAAAAASUVORK5CYII=" alt="refresh"> <span>Re-sample: On</span>
-            </button>
-          </div> -->
-            <div class="vis-card" style="margin-top: 1rem; width: 110%; margin-left: -5%; padding-top: 1.2rem; padding-bottom: 1rem; padding-left: 5px; padding-right: 5px;">
-              <div class="viewers-container">
-                <!-- JS will inject three viewers here when you click a tab -->
-              </div>
-              
-              <div>
-              <p class="subtitle is-6" style="color: #666; margin-top: 1rem; font-size: 0.95rem; line-height: 1.2;">
-
-                Orbit the viewer to see from different angles. Switch between objects using the buttons below.
-              </p>
-            </div>
-
-            <div class="controls-bar">
-              <button class="tab-button" data-obj="oxford">Oxford</button>
-              
-              <div class="rotate-controls">
-              <button id="btn-rotate" class="rotate-button">
-               Rotate: On
-              </button>
-              <button id="btn-traj" class="rotate-button">
-                Trajectory: Off
-              </button>
-              <button id="btn-pause" class="rotate-button">
-                Pause
-              </button>
-              </div>
-            </div>
-
-          </div>
-      </div>
-    </div>
+   
 
     
     <div class="section soft-section" id="concurrent-works" style="margin-top: -20px;">
