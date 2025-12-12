@@ -21,8 +21,8 @@ const cameraFOV = {
   hkust: 14,  // Default zoom
   mountain: 24,  // Default zoom
   tunnel: 18,  // Default zoom
-  corridor: 18,  // Default zoom
-  forest: 16  // Default zoom
+  corridor: 15,  // Default zoom
+  spagna: 18  // Default zoom
 };
 
 // Dataset-specific point size settings (radius)
@@ -38,7 +38,7 @@ const pointSize = {
   mountain: 0.006,
   tunnel: 0.005,
   corridor: 0.004,
-  forest: 0.004
+  spagna: 0.006
 };
 
 // OUTSIDE—at module scope, create and reuse these:
