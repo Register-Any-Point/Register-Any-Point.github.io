@@ -15,7 +15,10 @@ const cameraFOV = {
   bremen:  10,  // Zoom in a bit
   kitchen: 24,  // Zoom out a bit
   colosseum: 10,  // Zoom in a bit
-  campus: 16  // Default zoom
+  campus: 16,  // Default zoom
+  office: 22,  // Default zoom
+  sweetpepper: 16,  // Default zoom
+  hkust: 14  // Default zoom
 };
 
 // Dataset-specific point size settings (radius)
@@ -24,7 +27,10 @@ const pointSize = {
   bremen:  0.0025,
   kitchen: 0.007,
   colosseum: 0.003,
-  campus: 0.005
+  campus: 0.005,
+  office: 0.008,
+  sweetpepper: 0.007,
+  hkust: 0.003
 };
 
 // OUTSIDE—at module scope, create and reuse these:
@@ -56,8 +62,8 @@ function getTrajSphereGeo(objName) {
   return new THREE.SphereGeometry(radius, 6, 4);
 }
 
-const frameInterval = 60;    // ms per frame
-const pauseDuration = 3000;  // ms to pause at last frame
+const frameInterval = 80;    // ms per frame
+const pauseDuration = 4000;  // ms to pause at last frame
 let slowMode = true;         // toggle "slow" vs "normal" playback
 
 // 3) HSV → RGB HELPER (unchanged)

@@ -229,10 +229,13 @@ body {
   position: relative;
 }
 
-/* A.1) Container around just the three tabs */
+/* A.1) Container around just the dataset tabs */
 .tabs-container {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
+  max-width: 500px; /* Limit width to force wrapping into two rows (4 buttons per row) */
+  justify-content: center;
   /* Because .controls-bar is justify-content:center, this .tabs-container is centered */
 }
 
