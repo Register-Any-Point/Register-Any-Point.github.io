@@ -18,7 +18,11 @@ const cameraFOV = {
   campus: 16,  // Default zoom
   office: 22,  // Default zoom
   sweetpepper: 16,  // Default zoom
-  hkust: 14  // Default zoom
+  hkust: 14,  // Default zoom
+  mountain: 24,  // Default zoom
+  tunnel: 18,  // Default zoom
+  corridor: 18,  // Default zoom
+  forest: 16  // Default zoom
 };
 
 // Dataset-specific point size settings (radius)
@@ -30,7 +34,11 @@ const pointSize = {
   campus: 0.005,
   office: 0.008,
   sweetpepper: 0.007,
-  hkust: 0.003
+  hkust: 0.003,
+  mountain: 0.006,
+  tunnel: 0.005,
+  corridor: 0.004,
+  forest: 0.004
 };
 
 // OUTSIDE—at module scope, create and reuse these:
