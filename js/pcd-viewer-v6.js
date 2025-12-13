@@ -146,10 +146,58 @@ function syncAnglesFrom(srcControls) {
   }
 }
 
+// Helper function to check WebGL availability
+function checkWebGLSupport() {
+  try {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    return !!gl;
+  } catch (e) {
+    return false;
+  }
+}
+
+// Helper function to show WebGL error message
+function showWebGLError(container) {
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = `
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+    color: #333;
+    padding: 20px;
+    text-align: center;
+    font-family: sans-serif;
+  `;
+  errorDiv.innerHTML = `
+    <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; color: #d32f2f;">
+      WebGL Not Available
+    </div>
+    <div style="font-size: 0.9rem; line-height: 1.5;">
+      Your browser or system does not support WebGL, which is required to display 3D point clouds.<br>
+      Please try:<br>
+      • Updating your browser to the latest version<br>
+      • Enabling hardware acceleration in your browser settings<br>
+      • Using a different browser (Chrome, Firefox, or Edge)
+    </div>
+  `;
+  container.appendChild(errorDiv);
+}
+
 // 7) INITIALIZE A STATIC INPUT VIEWER (colored by label) (unchanged)
 function initInputViewer(container, objName) {
   const width  = container.clientWidth;
   const height = container.clientHeight;
+
+  // Check WebGL support
+  if (!checkWebGLSupport()) {
+    showWebGLError(container);
+    return null;
+  }
 
   // Scene, camera, renderer
   const scene = new THREE.Scene();
@@ -161,11 +209,18 @@ function initInputViewer(container, objName) {
   camera.position.set(0, 1.4, 5);
   camera.lookAt(0, 0, 0);
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(width, height);
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  container.appendChild(renderer.domElement);
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(width, height);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    container.appendChild(renderer.domElement);
+  } catch (error) {
+    console.error('Failed to create WebGL renderer:', error);
+    showWebGLError(container);
+    return null;
+  }
 
   // Lights
   const ambient = new THREE.AmbientLight(0xffffff, 1.8);
@@ -362,10 +417,16 @@ function initInputViewer(container, objName) {
   };
 }
 
-// 8) INITIALIZE A “SAMPLED” VIEWER (20‐frame animation)
+// 8) INITIALIZE A "SAMPLED" VIEWER (20‐frame animation)
 function initSampledViewer(container, objName, initialSampleId) {
   const width  = container.clientWidth;
   const height = container.clientHeight;
+
+  // Check WebGL support
+  if (!checkWebGLSupport()) {
+    showWebGLError(container);
+    return null;
+  }
 
   // Scene, camera, renderer
   const scene = new THREE.Scene();
@@ -377,11 +438,18 @@ function initSampledViewer(container, objName, initialSampleId) {
   camera.position.set(0, viewerParams.cameraY, 5);
   camera.lookAt(0, 0, 0);
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(width, height);
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  container.appendChild(renderer.domElement);
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(width, height);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    container.appendChild(renderer.domElement);
+  } catch (error) {
+    console.error('Failed to create WebGL renderer:', error);
+    showWebGLError(container);
+    return null;
+  }
 
   // Lights
   const ambient = new THREE.AmbientLight(0xffffff, 1.8);
@@ -1248,6 +1316,12 @@ function selectObject(objName) {
   const state1 = initSampledViewer(sampleDiv1, objName, id1);
   const state2 = initSampledViewer(sampleDiv2, objName, id2);
   
+  // Check if WebGL initialization failed
+  if (!inputState || !state1 || !state2) {
+    console.error('Failed to initialize viewers - WebGL not available');
+    return; // Exit early if WebGL is not supported
+  }
+  
   // Set viewer indices: 0 = left, 1 = right
   state1.viewerIndex = 0;
   state2.viewerIndex = 1;
@@ -1269,7 +1343,7 @@ function selectObject(objName) {
   }
   // Actually enable autoRotate on every viewer's OrbitControls
   allStates.forEach((st) => {
-    if (st.controls) st.controls.autoRotate = true;
+    if (st && st.controls) st.controls.autoRotate = true;
   });
 
   showTrajectories = false; // disable any lingering trajectories
@@ -1283,6 +1357,11 @@ function selectObject(objName) {
   currentFrameIdx = 0;
   
   // Wait for both initial loads to complete before starting animation
+  // Only proceed if both states are valid
+  if (!state1 || !state2) {
+    return; // Exit early if WebGL initialization failed
+  }
+  
   Promise.all([
     state1.initialLoadPromise || Promise.resolve(),
     state2.initialLoadPromise || Promise.resolve()
