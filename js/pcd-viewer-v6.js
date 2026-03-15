@@ -15,7 +15,7 @@ const cameraFOV = {
   bremen:  10,  // Zoom in a bit
   kitchen: 24,  // Zoom out a bit
   colosseum: 10,  // Zoom in a bit
-  campus: 16,  // Default zoom
+  park: 20,  // Default zoom
   office: 22,  // Default zoom
   sweetpepper: 16,  // Default zoom
   hkust: 14,  // Default zoom

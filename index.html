@@ -188,9 +188,7 @@
                 </div>
               <div class="has-text-left mb-2" style="margin-top: 1rem;">
                 <p>
-                  <strong>Our method for scalable multi-view point cloud registration.</strong> To register multiple unposed point clouds, prior work typically first performs correspondence matching and then optimizes a pose graph (top-left).
-                  In contrast, we introduce a single-stage model that directly generates the registered point cloud via flow matching in Euclidean space (top-right), bypassing the need for explicit correspondence matching and pose graph optimization.
-               Our model generalizes across diverse point cloud data from object-centric, indoor, and outdoor scenarios at scan, sub-map, and map levels (bottom).
+                  <strong>Our method for scalable multi-view point cloud registration.</strong> Prior works perform pairwise registration via correspondence matching and then conduct pose graph optimization (top-left). We use a single-stage flow matching model to generate the registered points (top-middle). Our model RAP generalizes across various view counts, scales, and sensor modalities (bottom) and achieves superior zero-shot performance with the shortest runtime on the cross-domain multi-view registration benchmark (top-right).
                 </p>
               </div>
               </div>
@@ -245,7 +243,7 @@
               <button class="tab-button" data-obj="bremen">Bremen</button>
               <button class="tab-button" data-obj="kitchen">Kitchen</button>
               <button class="tab-button" data-obj="colosseum">Colosseum</button>
-              <button class="tab-button" data-obj="campus">Campus</button>
+              <button class="tab-button" data-obj="park">Park</button>
               <button class="tab-button" data-obj="office">Office</button>
               <button class="tab-button" data-obj="sweetpepper">Fruit</button>
               <button class="tab-button" data-obj="hkust">HKUST</button>
@@ -280,19 +278,7 @@
               <h3 class="title is-4 section-title">Abstract</h3>
               <div class="has-text-left">
                 <p>
-                  Point cloud registration aligns multiple unposed point clouds into a common
-                  frame, and is a core step for 3D reconstruction and robot localization. In this
-                  work, we cast registration as conditional generation: a learned continuous,
-                  point-wise velocity field transports noisy points to a registered scene, from
-                  which the pose of each view is recovered. Unlike previous methods that conduct
-                  correspondence matching to estimate the transformation between a pair of point
-                  clouds and then optimize the pairwise transformations to realize multi-view
-                  registration, our model directly generates the registered point cloud. With a
-                  lightweight local feature extractor and test-time rigidity enforcement, our
-                  approach achieves state-of-the-art results on pairwise and multi-view
-                  registration benchmarks, particularly with low overlap, and generalizes across
-                  scales and sensor modalities. It further supports downstream tasks including
-                  relocalization, multi-robot SLAM, and multi-session map merging.
+                  Point cloud registration aligns multiple unposed point clouds into a common reference frame and is a core step for 3D reconstruction and robot localization without initial guess. In this work, we cast registration as conditional generation: a learned, continuous point-wise velocity field transports noisy points to a registered scene, from which the pose of each view is recovered. Unlike prior methods that perform correspondence matching to estimate pairwise transformations and then optimize a pose graph for multi-view registration, our model directly generates the registered point cloud, yielding both efficiency and point-level global consistency. By scaling the training data and conducting test-time rigidity enforcement, our approach achieves state-of-the-art results on existing pairwise registration benchmarks and on our proposed cross-domain multi-view registration benchmark. The superior zero-shot performance on this benchmark shows that our method generalizes across view counts, scene scales, and sensor modalities even with low overlap.
                 </p>
               </div>
             </div>
